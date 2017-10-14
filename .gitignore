@@ -1,0 +1,9 @@
+*.pdf
+*.asc
+*.gpg
+*.sig
+src/.pgpost_pass
+gpgdb/*
+venv/*
+src/__pycache__/*
+src/test*
