@@ -2,8 +2,8 @@
 *.asc
 *.gpg
 *.sig
-src/.pgpost_pass
+pgpost/.pgpost_pass
 gpgdb/*
 venv/*
-src/__pycache__/*
-src/test*
+pgpost/__pycache__/*
+pgpost/test*

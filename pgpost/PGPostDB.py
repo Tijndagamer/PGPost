@@ -32,6 +32,7 @@ class PGPostDB:
 
     def __init__(self, server, username, password, db):
         """Class to handle the PGPost backend: content and pubkey databases."""
+
         self.con = mdb.connect(server, username, password, db)
         self.cur = self.con.cursor()
         self.gpg = gnupg.GPG(gnupghome = GPGHOME)
