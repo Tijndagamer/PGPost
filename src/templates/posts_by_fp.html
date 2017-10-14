@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Posts by {{ fingerprint }}</title>
+</head>
+<body>
+    <pre>
+    {% for post in posts %}
+{{ post["header"] }}
+{{ post["post"] }}
+{{ post["trustbar"] }} <a href="/id/{{ post["id"] }}/raw">raw</a>
+    {% endfor %}
+    </pre>
+</body>
+</html>
