@@ -2,12 +2,11 @@
 <html lang="en">
 <head>
     <title>Post id: {{ id_n }}</title>
+    <link rel="stylesheet" href="/static/stylesheet.css">
 </head>
 <body>
-    <pre>
-{{ post["header"] }}
-{{ post["post"] }}
-{{ post["footer"] }}
-    </pre>
+    <pre>{{ post["header"] }}
+{{ post["post"] }}</pre>
+    <pre class="red">{{ post["footer"] }}</pre>
 </body>
 </html>
