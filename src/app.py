@@ -70,11 +70,28 @@ def strip_signature(post):
 def hello_world():
     return "Hello!"
 
+# This should be possible in a more efficient way,.
 @app.route("/id/<int:id_n>")
 def show_post_id(id_n):
     """Show post of given id."""
 
-    return "" 
+    try:
+        raw_post = db.read_by_id_n(id_n)
+    except IndexError:
+        abort(404)
+
+    header = "{name} ({posttime}) [{fingerprint}] \n".format(name = raw_post["name"], \
+            posttime = raw_post["posttime"], fingerprint = raw_post["fingerprint"])
+    i = len(header) - 2
+    while i > 0:
+        header += '-'
+        i -= 1
+    post_text = strip_signature(raw_post["post"])
+    footer = "{trustbar}".format(trustbar = format_trustbar(raw_post["trust"]))
+
+    post = {"header" : header, "post" : post_text, "footer" : footer}
+
+    return render_template("post_id_raw.html", id_n = id_n, post = post)
 
 @app.route("/id/<int:id_n>/raw")
 def show_post_id_raw(id_n):
