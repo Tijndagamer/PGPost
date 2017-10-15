@@ -6,11 +6,10 @@
     <title>Posts by {{ fingerprint }}</title>
 </head>
 <body>
-    <pre>
-    {% for post in posts %}
+    <pre>{% for post in posts %}
 {{ post["header"] }}
 {{ post["post"] }}
-{{ post["trustbar"] }} <a href="/id/{{ post["id"] }}/raw">raw</a>
+{{ post["trustbar"] }} <a href="/post?id={{ post["id"] }}&raw">raw</a>
     {% endfor %}
     </pre>
 </body>

@@ -24,6 +24,8 @@ from flask import render_template
 from flask import abort
 from flask import redirect
 from flask import url_for
+from flask import request
+
 app = Flask(__name__)
 
 # There's probably a better way to not save the password in the source.
@@ -70,11 +72,16 @@ def strip_signature(post):
 def hello_world():
     return "Hello!"
 
-# This should be possible in a more efficient way,.
-@app.route("/id/<int:id_n>")
-def show_post_id(id_n):
+@app.route("/post")
+def show_post_id():
     """Show post of given id."""
 
+    id_n = request.args.get("id")
+    raw = request.args.get("raw")
+
+    if id_n == None:
+        abort(404)
+
     try:
         raw_post = db.read_by_id_n(id_n)
     except IndexError:
@@ -86,34 +93,16 @@ def show_post_id(id_n):
     while i > 0:
         header += '-'
         i -= 1
-    post_text = strip_signature(raw_post["post"])
+
+    if raw != None:
+        post_text = raw_post["post"]
+    else:
+        post_text = strip_signature(raw_post["post"])
     footer = "{trustbar}".format(trustbar = format_trustbar(raw_post["trust"]))
 
     post = {"header" : header, "post" : post_text, "footer" : footer}
 
-    return render_template("post_id_raw.html", id_n = id_n, post = post)
-
-@app.route("/id/<int:id_n>/raw")
-def show_post_id_raw(id_n):
-    """Show raw post of given id."""
-
-    try:
-        raw_post = db.read_by_id_n(id_n)
-    except IndexError:
-        abort(404)
-    
-    header = "{name} ({posttime}) [{fingerprint}] \n".format(name = raw_post["name"], \
-            posttime = raw_post["posttime"], fingerprint = raw_post["fingerprint"])
-    i = len(header) - 2
-    while i > 0:
-        header += '-'
-        i -= 1
-    post_text = raw_post["post"]
-    footer = "{trustbar}".format(trustbar = format_trustbar(raw_post["trust"]))
-
-    post = {"header" : header, "post" : post_text, "footer" : footer}
-
-    return render_template("post_id_raw.html", id_n = id_n, post = post)
+    return render_template("post.html", id_n = id_n, post = post)
 
 @app.route("/fp/<fingerprint>")
 def show_posts_by_fingerprint(fingerprint):
