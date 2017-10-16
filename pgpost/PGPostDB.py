@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """
-	PGPostDB.py
+    PGPostDB.py
     This file is part of PGPost.
 
     Copyright (c) 2017 Martijn
@@ -30,6 +30,12 @@ class PGPostDB:
     con = None
     cur = None
 
+    add_post = """INSERT INTO
+            posts
+                (id, fingerprint, username, trust, post, posttime)
+            VALUES
+                (NULL, %(fingerprint)s, %(username)s, %(trust)s, %(post)s, NULL)"""
+
     def __init__(self, server, username, password, db):
         """Class to handle the PGPost backend: content and pubkey databases."""
 
@@ -56,15 +62,15 @@ class PGPostDB:
         """
 
         ver = self.verify(post)
-        
+
         if ver.valid:
-            self.cur.execute("INSERT INTO `posts`(`id`, `fingerprint`, `username`, \
-                    `trust`, `post`, `posttime`) \
-                    VALUES(NULL, \"{fingerprint}\", \"{username}\", \"{trust}\", \"{post}\", NULL)".format(\
-                    fingerprint=ver.fingerprint, username=ver.username, \
-                    trust=ver.trust_level, post=post))
+            data_new_post = { "fingerprint" : ver.fingerprint,
+                    "username" : ver.username,
+                    "trust" : ver.trust_level,
+                    "post" : post,}
+            self.cur.execute(self.add_post, data_new_post)
             self.con.commit()
-            return True
+            return True, self.cur.rowcount
         else:
             return False
 
