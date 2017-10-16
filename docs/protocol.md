@@ -4,7 +4,7 @@ PGP ID Post
 Status
 ------
 
-This is a draft.
+This protocol spec. is not yet finished. This is a draft.
 
 Abstract
 --------
@@ -12,14 +12,20 @@ Abstract
 The PGP ID Post protocol is a protocol which describes the use of PGP to
 authenticate user posted content on a website.
 
-1. INTRODUCTION
+1 INTRODUCTION
 ---------------
 
-Modern websites often allow users to register an account to their service
-to upload personal content, to place an order without the need to enter the
-same information over and over again. In current infrastructure, the user
-authenticates with a password, and sometimes an extra OTP or another form
-of 2FA, to the server. This protocol however radically changes this scheme.
+A large portion of websites today follow a registration-based model for
+content validation, meaning that a user will register with their personal
+creds. This allows them to use the service without authenticating
+themselves before every action.
+
+Though, they will usually be forced to enter their password when logging
+into their account, and other security layers such as 2-factor auth if
+they have enabled that.
+
+This protocol however, deviates drastically from this model, and allows
+for safer communication with the server.
 
 1.1 Registering a new user
 --------------------------
@@ -47,14 +53,14 @@ the user interface may show the level of trust of each user. This way
 everyone may post content and users themselves may evaluate if they trust
 the user.
 
-Without a barrier to entry, spam might become a problem.
+Without a significant barrier of entry, spam might become a problem.
 
 1.1.3 Revocation
 ----------------
 
 The server will periodically check keyservers to evaluate if trusted keys
-have been revoked in order to preserve integrity of the trusted users
-database.
+have been revoked in order to preserve the integrity of the database's
+content.
 
 1.2 Posting content
 -------------------
@@ -70,7 +76,8 @@ will process the message accordingly.
 1.2.1 Duplicates
 ----------------
 
-All duplicate posts will be ignored.
+If someone attempts to upload a duplicate post, it will be skipped by the
+server.
 
 1.2.2 Time sensitivity
 ----------------------
@@ -91,12 +98,13 @@ network protocols may be used, although this is not recommended.
 ------------------
 
 The server will make available the signature files to allow for other users
-to verify the content individually.
+to verify the content individually. This allows users to confirm the
+legitimacy of the server's content.
 
 1.3 Benefits
 ------------
 
 This protocol allows for most of the cryptographic calculations to be
 executed on the client's computer, thanks to the OpenPGP protocol. As a
-result, users don't need to trust the server as much as in the current
-model.
+result, users don't need to trust the server as much as in the model
+used by most other websites.
