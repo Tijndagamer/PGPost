@@ -4,7 +4,7 @@ PGP ID Post
 Status
 ------
 
-This protocol spec. is not yet finished. This is a draft.
+This protocol specification is not yet finished. This is a draft.
 
 Abstract
 --------
@@ -17,12 +17,12 @@ authenticate user posted content on a website.
 
 A large portion of websites today follow a registration-based model for
 content validation, meaning that a user will register with their personal
-creds. This allows them to use the service without authenticating
+credentials. This allows them to use the service without authenticating
 themselves before every action.
 
-Though, they will usually be forced to enter their password when logging
-into their account, and other security layers such as 2-factor auth if
-they have enabled that.
+Though, they will usually be forced to enter their password when logging into
+their account, and other security layers such as 2-factor authentication if they
+have enabled that.
 
 This protocol however, deviates drastically from this model, and allows
 for safer communication with the server.
