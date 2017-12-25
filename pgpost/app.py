@@ -18,15 +18,25 @@
     along with PGPost.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-from PGPostDB import PGPostDB
 from flask import Flask
-from flask import render_template
 from flask import abort
 from flask import redirect
-from flask import url_for
+from flask import render_template
 from flask import request
+from flask import url_for
+from flask import flash
+from werkzeug.utils import secure_filename
+from PGPostDB import PGPostDB
+import os
+import uuid
+from random import randint
+
+UPLOAD_FOLDER = "/tmp/pgpostuploads"
+ALLOWED_EXTENSIONS= set(["asc", "md", "txt"])
 
 app = Flask(__name__)
+
+app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
 # There's probably a better way to not save the password in the source.
 password = ""
@@ -37,7 +47,7 @@ db = PGPostDB("localhost", "pgpost", password, "PGPost")
 # Utility functions
 
 def format_trustbar(trust):
-    trustbar = "trust: [....]"
+    trustbar = "[....]"
     if trust == 1:
         trustbar = "[=...]"
     elif trust == 2:
@@ -66,11 +76,16 @@ def strip_signature(post):
             i += 1
     return text
 
+def allowed_file(filename):
+    """Checks for allowed file extensions."""
+
+    return '.' in filename and \
+            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 # URL handlers
 
 @app.route("/")
 def hello_world():
-    return "Hello!"
+    return render_template("index.html")
 
 @app.route("/post")
 def show_post_id():
@@ -124,6 +139,38 @@ def show_posts_by_fingerprint(fingerprint):
                 "id" : raw_post["id"]})
 
     return render_template("posts_by_fp.html", fingerprint = fingerprint, posts = posts)
+
+@app.route("/upload", methods=["GET", "POST"])
+def upload_new_post():
+    """Allows the user to upload a new post."""
+
+    if request.method == "POST":
+        if "file" not in request.files:
+            return render_template("upload_failed", error = "No file part.")
+        f = request.files["file"]
+        if f.filename == '':
+            return render_template("upload_failed.html", error = "No file selected.")
+        if f and allowed_file(f.filename):
+            # Create a unique filename
+            filename = uuid.uuid4().hex + '-' + secure_filename(f.filename)
+            filepath = os.path.join(app.config["UPLOAD_FOLDER"], filename)
+            f.save(filepath)
+            with open(filepath) as fo:
+                success, c = db.post(fo.read())
+                os.remove(filepath)
+                if success:
+                    return render_template("upload_success.html")
+                else:
+                    return render_template("upload_failed.html", error = "Invalid, wrong or not trusted signature.")
+        else:
+            flash("Incorrect file")
+            return redirect(request.url)
+
+    return render_template("upload.html")
+
+@app.route("/random")
+def random_post():
+   return redirect("/post?id=" + str(randint(1, 10)))
 
 # Error handlers
 
