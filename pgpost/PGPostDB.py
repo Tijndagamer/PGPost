@@ -72,7 +72,7 @@ class PGPostDB:
             self.con.commit()
             return True, self.cur.rowcount
         else:
-            return False
+            return False, -1
 
     def read(self):
         """Returns all posts"""
