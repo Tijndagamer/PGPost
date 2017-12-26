@@ -1,8 +1,12 @@
 PGPost
 ======
 
-PGPost is user authentication using the OpenPGP protocol for microblogging and
-other online services. This means of authentication is described in `docs/protocol.md`.
+PGPost is a proof of concept microblogging service which authenticates each individual
+post, rather than a login at the start of a session. Although this form of authentication
+makes user based personalization impossible, it significantly decreases the amount of trust
+a user has to have in the service. Each user can verify each post themselves, and thanks
+to the PGP Web of Trust they know who they can trust. For more information on this way
+of authentication, see `docs/protocol.md`.
 
 Dependencies
 ------------
