@@ -38,6 +38,10 @@ app = Flask(__name__)
 
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
+if os.path.isdir(app.config["UPLOAD_FOLDER"]) == False:
+    print("UPLOAD_FOLDER does not exist yet, creating...")
+    os.mkdir(app.config["UPLOAD_FOLDER"])
+
 # There's probably a better way to not save the password in the source.
 password = ""
 with open(".pgpost_pass") as f:
