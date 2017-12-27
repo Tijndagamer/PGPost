@@ -167,8 +167,7 @@ def upload_new_post():
                 else:
                     return render_template("upload_failed.html", error = "Invalid, wrong or not trusted signature.")
         else:
-            flash("Incorrect file")
-            return redirect(request.url)
+            return render_template("upload_failed.html", error = "Illegal file.")
 
     return render_template("upload.html")
 
