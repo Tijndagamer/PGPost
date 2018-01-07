@@ -3,7 +3,7 @@
     PGPostDB.py
     This file is part of PGPost.
 
-    Copyright (c) 2017 Martijn
+    Copyright (c) 2017, 2018 Martijn
 
     PGPost is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
@@ -93,7 +93,7 @@ class PGPostDB:
                 "trust" : raw_post[3], "post" : raw_post[4], "posttime" : raw_post[5]}
 
     def read_by_fingerprint(self, fingerprint):
-        """Returns all posts in the database by specified fingerprint
+        """Returns all posts in the database by specified fingerprint.
 
         Returns a list with a dictionary for each post. Each dictionary has an
         id, fingerprint, name, trust, post and posttime value.
@@ -108,12 +108,33 @@ class PGPostDB:
         return posts
 
     def read_by_id_n(self, id_n):
-        """Returns the post in the database with the specified id_n"""
+        """Returns the post in the database with the specified id_n, formatted
+        by format_post.
+
+        Returns False if there's no post for a given id_n.
+        """
 
         self.cur.execute("SELECT * FROM posts WHERE id = \"{}\"".format(id_n))
         rows = self.cur.fetchall()
 
-        return self.format_post(rows[0])
+        if len(rows) != 0:
+            return self.format_post(rows[0])
+        else:
+            return False
+
+    def read_latest(self):
+        """Returns the latest post in the database.
+
+        Latest is defined as the post with the highest ID number.
+        Returns False when an error occured.
+        """
+
+        self.cur.execute("SELECT * FROM posts ORDER BY id DESC LIMIT 1")
+        rows = self.cur.fetchall()
+        if len(rows) != 0:
+            return self.format_post(rows[0])
+        else:
+            return False
 
     def close(self):
         self.con.close()
