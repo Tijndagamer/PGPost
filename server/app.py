@@ -25,11 +25,14 @@ from flask import render_template
 from flask import request
 from flask import url_for
 from flask import flash
+from flask import json
 from werkzeug.utils import secure_filename
-from PGPostDB import PGPostDB
 import os
 import uuid
 from random import randint
+
+from db import PGPostDB
+import api
 
 UPLOAD_FOLDER = "/tmp/pgpostuploads"
 ALLOWED_EXTENSIONS= set(["asc", "md", "txt"])
@@ -195,6 +198,35 @@ def upload_new_post():
 @app.route("/random")
 def random_post():
    return redirect("/post?id=" + str(randint(1, 10)))
+
+# API
+
+@app.route("/api/test", methods=["GET"])
+def api_test():
+    return api.success()
+
+@app.route("/api/post", methods=["GET"])
+def api_post():
+    """Return a post in JSON for the API."""
+
+    id_n = request.args.get("id")
+    raw = request.args.get("raw")
+
+    try:
+        id_n = int(id_n)
+    except:
+        return api.error("Invalid ID number", 404)
+
+    raw_post = db.read_by_id_n(id_n)
+    if raw_post == False:
+        return api.error("Empty raw_post", 404)
+
+    if raw != None:
+        post_text = raw_post["post"]
+    else:
+        post_text = strip_signature(raw_post["post"])
+
+    return api.format_post(raw_post, post_text)
 
 # Error handlers
 
