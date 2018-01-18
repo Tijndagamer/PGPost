@@ -26,6 +26,10 @@ from flask import request
 from flask import Response
 from flask import json
 
+def ok(json_data):
+    res = Response(json_data, status=200, mimetype="application/json")
+    return res
+
 def success():
     res = Response("{\"success\":true}", status=200, mimetype="application/json")
     return res
@@ -35,6 +39,7 @@ def error(reason, errno):
     return res
 
 def format_post(raw_post, post_text):
+    """Format post in json."""
+
     raw_post["post"] = post_text
-    res = Response(json.dumps(raw_post))
-    return res
+    return json.dumps(raw_post)

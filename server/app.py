@@ -226,7 +226,7 @@ def api_post():
     else:
         post_text = strip_signature(raw_post["post"])
 
-    return api.format_post(raw_post, post_text)
+    return api.ok(api.format_post(raw_post, post_text))
 
 # Error handlers
 
