@@ -2,7 +2,7 @@
     app.py
     This file is part of PGPost.
 
-    Copyright (c) 2017 Martijn
+    Copyright (c) 2017, 2018 Martijn
 
     PGPost is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
@@ -91,19 +91,40 @@ def allowed_file(filename):
 def hello_world():
     return render_template("index.html")
 
+@app.route("/latest")
+def show_latest():
+    """Redirect to latest post."""
+
+    return redirect("/post&latest")
+
 @app.route("/post")
 def show_post_id():
-    """Show post of given id."""
+    """Show a post.
 
-    id_n = request.args.get("id")
-    raw = request.args.get("raw")
-
-    if id_n == None:
-        abort(404)
+    Either gives the post of the specified ID or returns the latest post.
+    """
 
     try:
+        latest = request.args.get("latest")
+        id_n = request.args.get("id")
+        raw = request.args.get("raw")
+    except:
+        print("dafuq")
+
+    print(latest)
+    print(id_n)
+    print(raw)
+
+    if latest != None:
+        raw_post = db.read_latest()
+
+    if id_n == None or latest != None:
+        raw_post = db.read_latest()
+    else:
         raw_post = db.read_by_id_n(id_n)
-    except IndexError:
+    # Abort to 404 page if there's no post for id_n
+    if raw_post == False:
+        print("Raw post is empty!")
         abort(404)
 
     header = "{name} ({posttime}) [{fingerprint}] \n".format(name = raw_post["name"], \
