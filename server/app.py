@@ -228,6 +228,17 @@ def api_post():
 
     return api.ok(api.format_post(raw_post, post_text))
 
+@app.route("/api/upload", methods=["POST"])
+def api_upload():
+    """Upload a JSON formatted post to the database."""
+
+    if request.method == "POST":
+        success, c = db.post(request.form["post"].rstrip())
+        if success:
+            return api.success()
+        else:
+            return api.error("Error uploading post to database", 500)
+
 # Error handlers
 
 @app.errorhandler(404)
