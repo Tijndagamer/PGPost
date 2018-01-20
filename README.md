@@ -13,8 +13,8 @@ Dependencies
 
 System dependencies:
 ```
-    - gpg
-    - a MySQL server
+- gpg
+- a MySQL server
 ```
 
 Python dependencies:
@@ -27,7 +27,7 @@ License
 -------
 
 ```
-    Copyright (c) 2017 Martijn
+    Copyright (c) 2017, 2018 Martijn
 
     PGPost is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
