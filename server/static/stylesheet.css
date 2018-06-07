@@ -1,3 +1,16 @@
+body {
+    background-color: #000000;
+}
+
 .red {
-    color : red;
+    color: red;
+}
+
+p {
+    font-family: monospace;
+    color: #39f400;
+}
+
+pre {
+    color: #39f400;
 }
