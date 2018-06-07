@@ -98,7 +98,7 @@ def hello_world():
 def show_latest():
     """Redirect to latest post."""
 
-    return redirect("/post&latest")
+    return redirect("/post?latest")
 
 @app.route("/post")
 def show_post_id():
